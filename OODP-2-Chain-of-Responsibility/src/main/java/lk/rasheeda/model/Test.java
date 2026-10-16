@@ -13,45 +13,64 @@ class Patient{
     public String getName() {
         return name;
     }
-    public void setName(String name) {
-        this.name = name;
+
+    public String getSyaptom(){
+        return syaptom;
     }
 
 }
 
-class GeneralDoctor{
-    SpecialDoctor specialDoctor;
+abstract class Doctor{
 
+    private Doctor doctor;
+
+    public Doctor getDoctor(){
+        return doctor;
+    }
+
+    public void setDoctor(Doctor doctor){
+        this.doctor = doctor;
+    }
+
+    public abstract void handle(Patient patient);
+}
+
+class GeneralDoctor extends Doctor{
+
+
+    @Override
     public void handle(Patient patient){
 
-        if(patient.syaptom.equalsIgnoreCase("Fever")){
+        if(patient.getSyaptom().equalsIgnoreCase("Fever")){
             System.out.println("General Doctor Treating...");
         }else {
-            specialDoctor.handle(patient);
+            this.getDoctor().handle(patient);
         }
 
     }
 }
 
-class SpecialDoctor{
+class SpecialDoctor extends Doctor{
 
-    Consultant consultant;
 
+
+    @Override
     public void handle(Patient patient){
-        if(patient.syaptom.equalsIgnoreCase("Chest Pain")){
+        if(patient.getSyaptom().equalsIgnoreCase("Chest Pain")){
             System.out.println("Special Doctor Treating...");
         }else {
-            consultant.handle(patient);
+            this.getDoctor().handle(patient);
         }
     }
 
 }
 
-class Consultant{
+class Consultant extends Doctor{
 
+    @Override
     public void handle(Patient patient){
 
-        if(patient.syaptom.equalsIgnoreCase("Heart Problem")){
+        if(patient.getSyaptom().equalsIgnoreCase("Heart Problem")){
             System.out.println("Consultant Treating...");
         }else {
             System.out.println("...");
@@ -65,17 +84,16 @@ public class Test {
 
     public static void main(String[] args) {
 
-        Patient patient = new Patient();
-        patient.name = "Rasheeda";
-        patient.syaptom = "Fever";
-
+        Patient patient = new Patient("Rasheeda","Fever");
 
         GeneralDoctor generalDoctor = new GeneralDoctor();
         SpecialDoctor specialDoctor = new SpecialDoctor();
         Consultant consultant = new Consultant();
 
-        generalDoctor.specialDoctor = specialDoctor;
-        specialDoctor.consultant = consultant;
+        generalDoctor.setDoctor(specialDoctor);
+        specialDoctor.setDoctor(consultant);
+
+        generalDoctor.handle(patient);
 
     }
 

@@ -1,6 +1,6 @@
 package lk.rasheeda.model;
 
-interface visitor {
+interface Visitor {
 
     public void visit(Lion lion);
 
@@ -10,27 +10,62 @@ interface visitor {
 
 }
 
-interface animal {
+interface Animal {
 
     public void run();
 
-    public void accept(visitor visitor);
+    public void accept(Visitor visitor);
 
 }
 
-class Lion implements animal {
+class EatVisitor implements Visitor{
+
+    @Override
+    public void visit(Lion lion) {
+        System.out.println("Lion is eating");
+    }
+
+    @Override
+    public void visit(Elephant elephant) {
+        System.out.println("Elephant is eating");
+    }
+
+    @Override
+    public void visit(Dog dog) {
+        System.out.println("Dog is eating");
+    }
+}
+
+class SleepVisitor implements Visitor{
+    @Override
+    public void visit(Lion lion) {
+        System.out.println("Lion is Sleeping");
+    }
+
+    @Override
+    public void visit(Elephant elephant) {
+        System.out.println("Elephant is Sleeping");
+    }
+
+    @Override
+    public void visit(Dog dog) {
+        System.out.println("Dog is Sleeping");
+    }
+}
+
+class Lion implements Animal {
     @Override
     public void run() {
         System.out.println("Lion run...");
     }
 
     @Override
-    public void accept(visitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }
 
-class Elephant implements animal {
+class Elephant implements Animal {
 
     @Override
     public void run() {
@@ -38,12 +73,12 @@ class Elephant implements animal {
     }
 
     @Override
-    public void accept(visitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }
 
-class Dog implements animal {
+class Dog implements Animal {
 
     @Override
     public void run() {
@@ -51,7 +86,7 @@ class Dog implements animal {
     }
 
     @Override
-    public void accept(visitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }
@@ -67,6 +102,18 @@ public class Test {
         lion.run();
         elephant.run();
         dog.run();
+
+        EatVisitor eatVisitor  = new EatVisitor();
+        SleepVisitor sleepVisitor = new SleepVisitor();
+
+        lion.accept(eatVisitor);
+        elephant.accept(eatVisitor);
+        dog.accept(eatVisitor);
+
+        lion.accept(sleepVisitor);
+        elephant.accept(sleepVisitor);
+        dog.accept(sleepVisitor);
+
 
     }
 

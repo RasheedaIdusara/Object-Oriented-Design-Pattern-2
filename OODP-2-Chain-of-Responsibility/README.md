@@ -20,3 +20,8 @@ A hospital patient consultation system.
 - Reduces coupling
 - Improves flexibility
 - Makes the system easier to extend
+
+##6. UML Diagram
+
+<img width="1468" height="815" alt="image" src="https://github.com/user-attachments/assets/2768bf41-f884-4def-b7fc-0f6229b895d1" />
+

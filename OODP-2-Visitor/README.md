@@ -1,5 +1,10 @@
 # Visitor Design Pattern
 
+<img width="1608" height="490" alt="image" src="https://github.com/user-attachments/assets/1129a2ca-7e11-46b7-b627-7b2612c4a2a0" />
+
+<img width="1510" height="871" alt="image" src="https://github.com/user-attachments/assets/62602d0d-a397-464d-95f1-b9c272fd67a8" />
+
+
 ## 1. Introduction
 Visitor is a Behavioral Design Pattern that allows new operations to be added to existing object structures without modifying their classes.
 

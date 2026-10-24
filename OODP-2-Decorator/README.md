@@ -1,5 +1,9 @@
 # Decorator Design Pattern
 
+<img width="1354" height="382" alt="image" src="https://github.com/user-attachments/assets/71867589-e52e-4159-95a3-44f3c6a24aa5" />
+<img width="1048" height="775" alt="image" src="https://github.com/user-attachments/assets/12ff9bf2-b026-49af-8642-0433a7db0eda" />
+
+
 ## 1. Introduction
 
 Decorator is a **Structural Design Pattern** that allows new responsibilities or behaviors to be added to an object dynamically without modifying its existing code.

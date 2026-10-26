@@ -5,6 +5,7 @@
 <img width="629" height="483" alt="image" src="https://github.com/user-attachments/assets/bbcaf721-1a1f-4162-ba32-d3ccff0eed3f" />
 
 
+
 ## 1. Introduction
 
 Composite is a **Structural Design Pattern** that allows individual objects and groups of objects to be treated uniformly.
@@ -13,9 +14,9 @@ It organizes objects into tree-like structures to represent **part-whole hierarc
 
 ## 2. Purpose
 
-The main purpose of the Composite Pattern is to treat individual objects (**Leaf**) and collections of objects (**Composite**) through a common interface.
+The main purpose of the Composite Pattern is to treat individual objects (Leaf) and collections of objects (Composite) through a common interface.
 
-It allows clients to work with both simple and complex objects in a consistent way.
+It allows clients to perform operations on both individual objects and groups of objects without distinguishing between them.
 
 ## 3. Real-World Example
 
@@ -23,203 +24,160 @@ A **File and Folder Management System**.
 
 A computer file system contains files and folders.
 
-- **File** – Represents an individual file.
+- **File** – Represents an individual file with a name and size.
 - **Folder** – Can contain multiple files and other folders.
-- **FileSystemComponent** – Common interface for files and folders.
+- **Component** – Common interface for both files and folders.
 
-A folder can contain both files and subfolders, forming a hierarchical tree structure.
+The system can display the file structure and calculate the total size of a folder, including all nested files and subfolders.
 
 ## 4. Main Components
 
-- **Component Interface:** `FileSystemComponent`
-- **Leaf:** `FileItem`
+- **Component Interface:** `Component`
+- **Leaf:** `File`
 - **Composite:** `Folder`
-- **Client:** `Main` class
+- **Client:** `Test` class
 
 ### Component
-Defines the common interface for both leaf and composite objects.
+
+Defines the common operations `display()` and `getSize()` for files and folders.
 
 ### Leaf
-Represents an individual object that does not contain child components.
+
+The `File` class represents an individual file.
+
+It stores the file name and size and returns its own size when `getSize()` is called.
 
 ### Composite
-Represents a group of objects and can contain both Leaf and Composite objects.
+
+The `Folder` class maintains an `ArrayList<Component>` containing files and subfolders.
+
+It supports adding, removing, displaying, and calculating the total size of its child components.
 
 ### Client
-Interacts with objects through the common component interface.
+
+The `Test` class creates files and folders, organizes them into a hierarchy, and executes the operations.
 
 ## 5. UML Class Diagram
 
 ```mermaid
 classDiagram
-    class FileSystemComponent {
+    class Component {
         <<interface>>
-        +showDetails(String indent) void
+        +display() void
+        +getSize() double
     }
 
-    class FileItem {
-        -String name
-        +showDetails(String indent) void
+    class File {
+        -String fileName
+        -double fileSize
+        +File(String fileName, double fileSize)
+        +display() void
+        +getSize() double
     }
 
     class Folder {
-        -String name
-        -List~FileSystemComponent~ children
-        +add(FileSystemComponent component) void
-        +remove(FileSystemComponent component) void
-        +showDetails(String indent) void
+        -String folderName
+        ~ArrayList~Component~ componentArrayList
+        +Folder(String folderName)
+        +add(Component component) void
+        +remove(Component component) void
+        +display() void
+        +getSize() double
     }
 
-    FileSystemComponent <|.. FileItem
-    FileSystemComponent <|.. Folder
+    class Test {
+        +main(String[] args) void
+    }
 
-    Folder "0..1" *-- "0..*" FileSystemComponent : contains
+    Component <|.. File
+    Component <|.. Folder
+    Folder o-- Component : contains
+    Test ..> File : creates
+    Test ..> Folder : creates
 ```
 
 ## 6. How It Works
 
-1. The `FileSystemComponent` interface defines the common `showDetails()` method.
-2. The `FileItem` class implements the interface and represents an individual file.
-3. The `Folder` class also implements the interface and maintains a collection of `FileSystemComponent` objects.
-4. The `Folder` class provides `add()` and `remove()` methods to manage child components.
-5. A folder can contain both `FileItem` and other `Folder` objects.
-6. When `showDetails()` is called on a folder, it recursively calls the same method on all its children.
-7. The client can treat individual files and folders uniformly through the common interface.
+1. The `Component` interface declares two methods: `display()` and `getSize()`.
+2. The `File` class implements `Component` and represents an individual file.
+3. Each file stores its file name and size.
+4. The `Folder` class implements `Component` and maintains a collection of child components.
+5. Files and subfolders are added using the `add()` method.
+6. Calling `display()` on a folder displays its name and recursively displays all child components.
+7. Calling `getSize()` on a folder recursively calculates the total size of its files and subfolders.
+8. The client accesses both files and folders through the common `Component` interface.
 
-## 7. Java Implementation Example
-
-### Component Interface
-
-```java
-interface FileSystemComponent {
-    void showDetails(String indent);
-}
-```
-
-### Leaf Class
-
-```java
-class FileItem implements FileSystemComponent {
-
-    private String name;
-
-    public FileItem(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public void showDetails(String indent) {
-        System.out.println(indent + "File: " + name);
-    }
-}
-```
-
-### Composite Class
-
-```java
-import java.util.ArrayList;
-import java.util.List;
-
-class Folder implements FileSystemComponent {
-
-    private String name;
-
-    private List<FileSystemComponent> children = new ArrayList<>();
-
-    public Folder(String name) {
-        this.name = name;
-    }
-
-    public void add(FileSystemComponent component) {
-        children.add(component);
-    }
-
-    public void remove(FileSystemComponent component) {
-        children.remove(component);
-    }
-
-    @Override
-    public void showDetails(String indent) {
-
-        System.out.println(indent + "Folder: " + name);
-
-        for (FileSystemComponent component : children) {
-            component.showDetails(indent + "  ");
-        }
-    }
-}
-```
-
-### Client Class
-
-```java
-public class Main {
-
-    public static void main(String[] args) {
-
-        Folder root = new Folder("Projects");
-
-        Folder src = new Folder("src");
-
-        FileSystemComponent file1 = new FileItem("Main.java");
-        FileSystemComponent file2 = new FileItem("Composite.java");
-        FileSystemComponent file3 = new FileItem("README.md");
-
-        src.add(file1);
-        src.add(file2);
-
-        root.add(src);
-        root.add(file3);
-
-        root.showDetails("");
-    }
-}
-```
-
-## 8. Tree Structure
-
-The Composite Pattern represents objects in a hierarchical tree structure.
+## 7. File and Folder Structure
 
 ```text
-Projects (Composite)
+Desktop (Composite)
 │
-├── src (Composite)
-│   ├── Main.java (Leaf)
-│   └── Composite.java (Leaf)
+├── Documents (Composite)
+│   ├── Note.txt (Leaf)       - 1.5
+│   └── Report.pdf (Leaf)     - 2.0
 │
-└── README.md (Leaf)
+├── Game.exe (Leaf)           - 2048.0
+│
+└── Images (Composite)
+    └── Photo.jpg (Leaf)      - 1.5
 ```
 
-In this structure:
+## 8. Important Concept: Recursive Composition
 
-- `Projects` is the root composite.
-- `src` is a nested composite.
-- `Main.java`, `Composite.java`, and `README.md` are leaf objects.
-- Each composite can contain multiple child components.
+One of the most important concepts of the Composite Pattern is **Recursion**.
 
-## 9. Important Concept: Recursive Composition
-
-One of the most important concepts of the Composite Pattern is **Recursive Composition**.
-
-A composite object can contain other composite objects.
+In this example, the `Folder` class calculates the total size of all child components recursively.
 
 ```java
-Folder mainFolder = new Folder("Main Folder");
-Folder subFolder = new Folder("Sub Folder");
+@Override
+public double getSize() {
 
-mainFolder.add(subFolder);
-subFolder.add(new FileItem("Test.java"));
+    double total = 0;
 
-mainFolder.showDetails("");
+    for (Component component : componentArrayList) {
+        total += component.getSize();
+    }
+
+    return total;
+}
+```
+
+### Explanation
+
+- If the child component is a `File`, `getSize()` returns its file size.
+- If the child component is a `Folder`, `getSize()` calculates the total size of its children.
+- This process continues recursively until all nested components are processed.
+
+### Size Calculation
+
+| Component | Size |
+|---|---:|
+| Note.txt | 1.5 |
+| Report.pdf | 2.0 |
+| Game.exe | 2048.0 |
+| Photo.jpg | 1.5 |
+| **Total Desktop Size** | **2053.0** |
+
+## 9. Object Composition
+
+The Composite Pattern uses object composition to build hierarchical structures.
+
+```java
+Folder desktopFolder = new Folder("Desktop");
+Folder documentsFolder = new Folder("Documents");
+
+File noteFile = new File("Note.txt", 1.5);
+
+documentsFolder.add(noteFile);
+desktopFolder.add(documentsFolder);
 ```
 
 Here:
 
-1. `mainFolder` contains `subFolder`.
-2. `subFolder` contains an individual file.
-3. Calling `showDetails()` on `mainFolder` processes its nested components recursively.
-
-This demonstrates how complex tree structures can be managed through a common interface.
+- `desktopFolder` contains `documentsFolder`.
+- `documentsFolder` contains `noteFile`.
+- Both `File` and `Folder` implement the `Component` interface.
+- The client can execute common operations on both types.
 
 ## 10. Advantages
 
@@ -229,22 +187,27 @@ This demonstrates how complex tree structures can be managed through a common in
 - Makes it easier to add new component types.
 - Follows the Open/Closed Principle.
 - Improves flexibility and maintainability.
+- Supports code reusability through polymorphism.
 
 ## 11. Disadvantages
 
 - Can make the design more complex for simple applications.
-- May be difficult to enforce restrictions on certain component types.
-- Can make the common interface difficult to design.
-- Deep recursive structures may affect performance.
+- May be difficult to restrict the types of components allowed in a folder.
+- Recursive operations can become expensive for very large structures.
+- Shared interfaces may contain operations that are not suitable for every component.
 
 ## 12. Example Output
 
 ```text
-Folder: Projects
-  Folder: src
-    File: Main.java
-    File: Composite.java
-  File: README.md
+Folder Name: Desktop
+Folder Name: Documents
+File Name: Note.txtFile Size :1.5
+File Name: Report.pdfFile Size :2.0
+File Name: Game.exeFile Size :2048.0
+Folder Name: Images
+File Name: Photo.jpgFile Size :1.5
+--------------------
+Total Size: 2053.0
 ```
 
 ## 13. Composite vs Decorator Pattern
@@ -253,15 +216,15 @@ Both Composite and Decorator are Structural Design Patterns.
 
 | Composite Pattern | Decorator Pattern |
 |---|---|
-| Organizes objects into tree structures | Adds functionality to objects |
+| Organizes objects into tree structures | Adds new functionality to objects |
 | Represents part-whole hierarchies | Extends object behavior dynamically |
 | Can contain multiple child objects | Typically wraps one component |
 | Example: File and Folder System | Example: Ice Cream Toppings |
 
 ## 14. Conclusion
 
-The Composite Design Pattern provides an effective way to manage individual objects and collections of objects using a common interface.
+The Composite Design Pattern provides a flexible way to manage individual objects and groups of objects through a common interface.
 
-In this practical example, files and folders are organized into a hierarchical tree structure.
+In this practical example, files and folders are organized into a hierarchical structure.
 
-The pattern demonstrates how **Recursion, Composition, and Polymorphism** can be used to build flexible, scalable, and maintainable object-oriented applications.
+The system demonstrates how **Recursion, Composition, and Polymorphism** can be used to display file structures and calculate folder sizes efficiently.

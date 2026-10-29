@@ -1,32 +1,61 @@
 package lk.rasheeda.model;
 
-class Zombie{
+import java.util.HashMap;
+import java.util.Map;
+
+abstract class Zombie{
+
+    public abstract void display();
+
+}
+
+class SharedZombie extends Zombie{
 
     private String type;
     private int attackpower;
     private String texture;
+
+
+    public SharedZombie(String type, int attackpower, String texture) {
+
+        this.type = type;
+        this.attackpower = attackpower;
+        this.texture = texture;
+
+    }
+
+    @Override
+    public void display() {
+
+    }
+}
+
+class UniqueZombie{
+
     private int x;
     private int y;
     private int health;
 
-    public Zombie(String type, int attackpower, String texture, int x, int y, int health) {
-        this.type = type;
-        this.attackpower = attackpower;
-        this.texture = texture;
+    private Zombie zombie;
+
+    public UniqueZombie(int x, int y, int health, Zombie zombie) {
         this.x = x;
         this.y = y;
         this.health = health;
+        this.zombie = zombie;
     }
 
-    public void display() {
+}
 
-        System.out.println("type : " + this.type);
-        System.out.println("attackpower : " + this.attackpower);
-        System.out.println("texture : " + this.texture);
-        System.out.println("x : " + this.x);
-        System.out.println("y : " + this.y);
-        System.out.println("health : " + this.health);
+class ZombiePool{
 
+    private static Map<String, Zombie> zombiesMap = new HashMap<>();
+
+    public static Zombie getZombie(){
+
+        if (){
+
+        }
     }
 
 }

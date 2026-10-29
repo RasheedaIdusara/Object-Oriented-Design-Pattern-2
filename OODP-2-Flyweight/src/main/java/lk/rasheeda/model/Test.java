@@ -1,15 +1,16 @@
 package lk.rasheeda.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-abstract class Zombie{
+abstract class AbstractZombie{
 
     public abstract void display();
 
 }
 
-class SharedZombie extends Zombie{
+class SharedZombie {
 
     private String type;
     private int attackpower;
@@ -24,39 +25,86 @@ class SharedZombie extends Zombie{
 
     }
 
-    @Override
-    public void display() {
-
+    public String getType() {
+        return type;
     }
+
+    public int getAttackpower() {
+        return attackpower;
+    }
+
+    public String getTexture() {
+        return texture;
+    }
+
 }
 
-class UniqueZombie{
+class Zombie extends AbstractZombie {
 
     private int x;
     private int y;
     private int health;
 
-    private Zombie zombie;
+    private SharedZombie sharedZombie;
 
-    public UniqueZombie(int x, int y, int health, Zombie zombie) {
+    public Zombie(String type,int attackPower,String texture,int x, int y, int health) {
         this.x = x;
         this.y = y;
         this.health = health;
-        this.zombie = zombie;
+
+        this.sharedZombie = SharedZombiePool.getSharedZombie(type,attackPower,texture);
     }
+
+    @Override
+    public void display() {
+
+        System.out.println("Type : "+this.sharedZombie.getType());
+        System.out.println("Attack Power : "+this.sharedZombie.getAttackpower());
+        System.out.println("Texture : "+this.sharedZombie.getTexture());
+        System.out.println("Position X : "+this.x);
+        System.out.println("Position Y : "+this.y);
+        System.out.println("Health : "+this.health);
+
+        System.out.println();
+
+
+    }
+
+
 
 }
 
-class ZombiePool{
+class SharedZombiePool{
 
-    private static Map<String, Zombie> zombiesMap = new HashMap<>();
+    private static final ArrayList<SharedZombie> sharedZombieArrayList = new ArrayList<>();
 
-    public static Zombie getZombie(){
+    public static SharedZombie getSharedZombie(String type, int attackpower, String texture) {
 
-        if (){
+        SharedZombie sz = null;
+
+        for(SharedZombie szItem : sharedZombieArrayList){
+
+            if (type.equals(szItem.getType())
+                    && attackpower == szItem.getAttackpower()
+                    && texture.equals(szItem.getTexture())){
+
+                sz = szItem;
+                break;
+
+            }
 
         }
+
+        if(sz == null){
+            sz = new SharedZombie(type, attackpower, texture);
+            sharedZombieArrayList.add(sz);
+        }
+
+        return sz;
+
     }
+
+
 
 }
 

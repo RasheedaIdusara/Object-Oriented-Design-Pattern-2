@@ -21,12 +21,12 @@ class TerminalExpression implements Expression{
     }
 }
 
-class NonTerminalExpression implements Expression{
+class NonTerminalExpression1 implements Expression{
 
     private Expression e1;
     private Expression e2;
 
-    public NonTerminalExpression(Expression e1,Expression e2) {
+    public NonTerminalExpression1(Expression e1,Expression e2) {
         this.e1=e1;
         this.e2=e2;
     }
@@ -38,14 +38,31 @@ class NonTerminalExpression implements Expression{
     }
 }
 
+class NonTerminalExpression2 implements Expression{
+
+    private Expression e1;
+    private Expression e2;
+
+    public NonTerminalExpression2(Expression e1,Expression e2) {
+        this.e1=e1;
+        this.e2=e2;
+    }
+
+
+    @Override
+    public int interpret() {
+        return e1.interpret()-e2.interpret();
+    }
+}
+
 public class Test {
 
     public static void main(String[] args) {
 
         Expression e1
-                = new NonTerminalExpression(new TerminalExpression(10),new TerminalExpression(20));
+                = new NonTerminalExpression1(new TerminalExpression(10),new TerminalExpression(20));
 
-        Expression e2 = new NonTerminalExpression(new NonTerminalExpression
+        Expression e2 = new NonTerminalExpression2(new NonTerminalExpression2
                 (new TerminalExpression(10),new TerminalExpression(20))
                 ,new TerminalExpression(50));
 
